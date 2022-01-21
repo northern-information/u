@@ -3,14 +3,20 @@
 -- >> k1: exit
 -- >> k2: back
 -- >> k3: next
--- >> e1: none 
--- >> e2: x
--- >> e3: y
+-- >> e1: scroll
+-- >> e2: scroll
+-- >> e3: scroll
+
+tabutil = require("tabutil")
 
 function init()
+  root = "/home/we/dust/data/u/REF/"
+  files, lines = {}, {}
+  index, y = 1, 0
+  scan_files()
+  load_current()
   screen_dirty = true
   redraw_clock_id = clock.run(redraw_clock)
-  x, y = 0, 0
 end
 
 function redraw()
@@ -18,23 +24,61 @@ function redraw()
   screen.aa(1)
   screen.font_face(1)
   screen.font_size(8)
+  show_file()
+  screen.level(15)
+  screen.pixel(0, 0)
+  screen.pixel(127, 0)
+  screen.pixel(0, 63)
+  screen.pixel(127, 63)
+  screen.fill()
+  screen.update()
 end
 
+function cr_lines(s)
+  return s:gsub('\r\n?', '\n'):gmatch('(.-)\n')
+end
+
+function cr_file_lines(filename)
+  local f = io.open(root .. filename, 'rb')
+  local s = f:read('*a')
+  f:close()
+  return s
+end
+
+function show_file()
+  local line_height = 8
+  local i = 1
+  for line in cr_lines(lines) do
+    screen.move(0, (i * line_height) + y)
+    screen.text(line)
+    i = i + 1
+  end
+end
+
+function scan_files()
+  local scan = util.scandir(root)
+  for k, file in pairs(scan) do
+    local name = string.gsub(file, "/", "")
+    files[#files + 1] = name
+  end
+end
+
+function load_current()
+  y = 0
+  lines = cr_file_lines(files[index])
+end
 
 function page(i)
   if i == -1 then
-    print("back")
+    index = util.wrap_max(index - 1, 1, #files)
   else
-    print("next")
+    index = util.wrap_max(index + 1, 1, #files)
   end
+  load_current()
 end
 
 function enc(e, d)
-  if e == 2 then
-    x = util.clamp(x + d, 0, 9) -- provisional
-  elseif e == 3 then
-    y = util.clamp(y + d, 0, 9)
-  end
+  y = y - d
   screen_dirty = true
 end
 
