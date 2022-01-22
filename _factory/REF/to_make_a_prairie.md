@@ -1,0 +1,7 @@
+To make a prairie it takes a clover and one bee,
+One clover, and a bee.
+And revery.
+The revery alone will do,
+If bees are few.
+
+- Emily Dickinson, 1755
