@@ -6,6 +6,12 @@
 
 - Roll some dice.
 
+
+## u/KEY - "KEYBOARD"
+
+- Test your language keyboard.
+
+
 ## u/REF - "REFERENCE"
 
 - Read some files.
