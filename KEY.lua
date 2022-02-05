@@ -18,7 +18,7 @@ function init()
 end
 
 function keyboard.code(code, value)
-  down = value == 1
+  down = value > 0
   if down then
     buffer = code
   end
