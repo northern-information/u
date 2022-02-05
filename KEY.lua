@@ -3,9 +3,9 @@
 -- >> k1: exit
 -- >> k2: -
 -- >> k3: -
--- >> e1: - 
--- >> e2: - 
--- >> e3: - 
+-- >> e1: -
+-- >> e2: -
+-- >> e3: -
 
 function init()
   screen.aa(1)
@@ -18,8 +18,15 @@ function init()
 end
 
 function keyboard.code(code, value)
-  down = value == 0
-  buffer = code
+  down = value == 1
+  if down then
+    buffer = code
+  end
+  screen_dirty = true
+end
+
+function keyboard.char(ch)
+  buffer = string.upper(ch)
   screen_dirty = true
 end
 
